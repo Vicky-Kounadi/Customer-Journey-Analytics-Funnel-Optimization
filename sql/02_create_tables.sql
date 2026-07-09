@@ -33,3 +33,15 @@ CREATE TABLE dim_product_categories (
 );
 
 SELECT * FROM dim_product_categories;
+
+
+-- Dimension table for different EVENTS in the session
+CREATE TABLE dim_events (
+	event_id INT PRIMARY KEY AUTO_INCREMENT,
+    event_name VARCHAR(50) UNIQUE NOT NULL,
+    stage_order INT UNIQUE,
+    is_funnel_stage BOOLEAN NOT NULL,
+    stage_description VARCHAR(100)
+);
+
+SELECT * FROM dim_events;

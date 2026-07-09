@@ -34,7 +34,6 @@ CREATE TABLE dim_product_categories (
 
 SELECT * FROM dim_product_categories;
 
-
 -- Dimension table for different EVENTS in the session
 CREATE TABLE dim_events (
 	event_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -45,3 +44,20 @@ CREATE TABLE dim_events (
 );
 
 SELECT * FROM dim_events;
+
+-- Dimension table for DATE/CALENDAR details --timestamps only in the actual event-
+CREATE TABLE dim_calendar (
+	date_id INT PRIMARY KEY ,
+    full_date DATE UNIQUE NOT NULL,
+	year SMALLINT NOT NULL,
+	month TINYINT NOT NULL, -- 1 till 12
+	day TINYINT NOT NULL, -- 1 till 31
+    quarter TINYINT NOT NULL, -- 1 till 4
+	week TINYINT NOT NULL, -- 1 till 52-53
+    weekday_num TINYINT NOT NULL, -- 1 till 7
+	day_name VARCHAR(10) NOT NULL,
+	month_name VARCHAR(10) NOT NULL,
+	is_weekend BOOLEAN NOT NULL
+);
+
+SELECT * FROM dim_calendar;

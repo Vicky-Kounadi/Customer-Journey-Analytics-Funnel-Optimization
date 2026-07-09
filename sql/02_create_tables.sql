@@ -61,3 +61,13 @@ CREATE TABLE dim_calendar (
 );
 
 SELECT * FROM dim_calendar;
+
+
+-- Dimension table for USERS
+CREATE TABLE dim_users (
+    user_id VARCHAR(20) PRIMARY KEY,
+    region VARCHAR(50) NOT NULL,
+	has_bonus BOOLEAN NOT NULL
+);
+
+SELECT * FROM dim_users;

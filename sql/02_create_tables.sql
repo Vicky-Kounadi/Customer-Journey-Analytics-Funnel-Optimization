@@ -71,3 +71,25 @@ CREATE TABLE dim_users (
 );
 
 SELECT * FROM dim_users;
+
+CREATE TABLE fact_events (
+	fact_event_id INT PRIMARY KEY AUTO_INCREMENT,
+	session_id VARCHAR(50) NOT NULL, 
+    user_id VARCHAR(20) NOT NULL,
+	device_id INT NOT NULL,
+	channel_id INT NOT NULL,
+	product_category_id INT NOT NULL,
+	event_id INT NOT NULL,
+	date_id INT NOT NULL,
+	event_timestamp DATETIME NOT NULL,
+	revenue DECIMAL(15,2) DEFAULT 0.00,
+    
+	FOREIGN KEY (user_id) REFERENCES dim_users(user_id),
+	FOREIGN KEY (device_id) REFERENCES dim_devices(device_id),
+	FOREIGN KEY (channel_id) REFERENCES dim_channels(channel_id),
+	FOREIGN KEY (product_category_id) REFERENCES dim_product_categories(product_category_id),
+	FOREIGN KEY (event_id) REFERENCES dim_events(event_id),
+	FOREIGN KEY (date_id) REFERENCES dim_calendar(date_id)
+);
+
+SELECT * FROM fact_events;

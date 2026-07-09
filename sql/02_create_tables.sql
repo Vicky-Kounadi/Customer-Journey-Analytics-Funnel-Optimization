@@ -25,3 +25,11 @@ CREATE TABLE dim_channels (
 );
 
 SELECT * FROM dim_channels;
+
+-- Dimension table for our business' PRODUCT categories
+CREATE TABLE dim_product_categories (
+	product_category_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_category_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+SELECT * FROM dim_product_categories;

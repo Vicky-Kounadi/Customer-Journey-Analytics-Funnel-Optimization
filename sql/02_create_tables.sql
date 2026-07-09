@@ -17,3 +17,11 @@ CREATE TABLE dim_devices (
 );
 
 SELECT * FROM dim_devices;
+
+-- Dimension table for CHANNEL types from where the user accessed
+CREATE TABLE dim_channels (
+	channel_id INT PRIMARY KEY AUTO_INCREMENT,
+    channel_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+SELECT * FROM dim_channels;

@@ -100,3 +100,22 @@ check_order AS (
 SELECT *
 FROM check_order
 WHERE stage - previous_stage > 1;
+
+-- Can events happen in wrong order
+WITH events_in_order AS (
+    SELECT session_id, event_time, event,
+        CASE event
+            WHEN 'Browse' THEN 1
+            WHEN 'Add to Cart' THEN 2
+            WHEN 'Checkout' THEN 3
+            WHEN 'Purchase' THEN 4
+        END AS stage_order
+    FROM raw_events
+),
+check_order AS (
+    SELECT *, LAG(stage_order) OVER (PARTITION BY session_id ORDER BY event_time) AS previous_stage
+    FROM events_in_order
+)
+SELECT *
+FROM check_order
+WHERE stage_order < previous_stage;

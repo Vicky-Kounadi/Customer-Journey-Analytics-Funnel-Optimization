@@ -130,3 +130,13 @@ SELECT r.session_id, r.event
 FROM raw_events r
 JOIN first_event f ON r.session_id = f.session_id AND r.event_time = f.first_time
 WHERE r.event != 'Browse';
+
+-- Does every purchase have a checkout before it-- does everyone pay
+SELECT DISTINCT p.session_id
+FROM raw_events p
+WHERE p.event = 'Purchase'
+AND NOT EXISTS (
+    SELECT 1
+    FROM raw_events c
+    WHERE c.session_id = p.session_id AND c.event = 'Checkout' AND c.event_time < p.event_time
+);

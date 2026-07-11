@@ -59,3 +59,18 @@ GROUP BY channel;
 SELECT product_category, COUNT(*) AS times
 FROM raw_events
 GROUP BY product_category;
+
+
+-- FUNNEL/SESSION OVERVIEW
+-- How many sessions
+SELECT COUNT(DISTINCT session_id)
+FROM raw_events;
+
+-- How many events in a session
+WITH events_per_session AS (
+	SELECT session_id, COUNT(*) AS events_count
+	FROM raw_events
+	GROUP BY session_id
+)
+SELECT MIN(events_count), MAX(events_count), AVG(events_count)
+FROM events_per_session;

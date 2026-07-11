@@ -74,3 +74,10 @@ WITH events_per_session AS (
 )
 SELECT MIN(events_count), MAX(events_count), AVG(events_count)
 FROM events_per_session;
+
+-- Can a session have 1+ purchases
+SELECT session_id, COUNT(event) AS purchase_count
+FROM raw_events
+WHERE event="Purchase"
+GROUP BY session_id
+HAVING purchase_count > 1;

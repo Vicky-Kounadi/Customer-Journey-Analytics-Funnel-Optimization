@@ -60,11 +60,11 @@ SELECT product_category, COUNT(*) AS times
 FROM raw_events
 GROUP BY product_category;
 
-
 -- FUNNEL/SESSION OVERVIEW
 -- How many sessions
 SELECT COUNT(DISTINCT session_id)
 FROM raw_events;
+-- 10.000
 
 -- How many events in a session
 WITH events_per_session AS (
@@ -74,6 +74,7 @@ WITH events_per_session AS (
 )
 SELECT MIN(events_count), MAX(events_count), AVG(events_count)
 FROM events_per_session;
+-- 1 to 4 avg 2
 
 -- Can a session have 1+ purchases
 SELECT session_id, COUNT(event) AS purchase_count
@@ -81,6 +82,7 @@ FROM raw_events
 WHERE event="Purchase"
 GROUP BY session_id
 HAVING purchase_count > 1;
+-- No
 
 -- Can a sesion skip stages
 WITH events_in_order AS (
@@ -100,6 +102,7 @@ check_order AS (
 SELECT *
 FROM check_order
 WHERE stage - previous_stage > 1;
+-- No
 
 -- Can events happen in wrong order
 WITH events_in_order AS (
@@ -119,6 +122,7 @@ check_order AS (
 SELECT *
 FROM check_order
 WHERE stage_order < previous_stage;
+-- No
 
 -- Does every session start with browse
 WITH first_event AS (
@@ -130,6 +134,7 @@ SELECT r.session_id, r.event
 FROM raw_events r
 JOIN first_event f ON r.session_id = f.session_id AND r.event_time = f.first_time
 WHERE r.event != 'Browse';
+-- Yes
 
 -- Does every purchase have a checkout before it-- does everyone pay
 SELECT DISTINCT p.session_id
@@ -140,6 +145,7 @@ AND NOT EXISTS (
     FROM raw_events c
     WHERE c.session_id = p.session_id AND c.event = 'Checkout' AND c.event_time < p.event_time
 );
+-- Yes
 
 -- Revenue comes only from purchase
 SELECT session_id, SUM(revenue) AS rev_not_pur
@@ -147,3 +153,11 @@ FROM raw_events
 WHERE event != 'Purchase'
 GROUP BY session_id
 HAVING rev_not_pur > 0;
+-- Yes
+
+-- Multiple sessions per user
+SELECT user_id, COUNT(DISTINCT session_id) AS sessions
+FROM raw_events
+GROUP BY user_id
+HAVING sessions > 1;
+-- No

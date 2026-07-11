@@ -39,3 +39,23 @@ FROM raw_events
 GROUP BY bonus_flag;
 -- Only yes/no OK
 
+-- COUNT QUERIES
+-- How many events
+SELECT event, COUNT(*)
+FROM raw_events
+GROUP BY event;
+
+-- How many devices
+SELECT device, COUNT(*) AS times
+FROM raw_events
+GROUP BY device;
+
+-- How many channels
+SELECT channel, COUNT(*) AS times
+FROM raw_events
+GROUP BY channel;
+
+-- How many product categ
+SELECT product_category, COUNT(*) AS times
+FROM raw_events
+GROUP BY product_category;

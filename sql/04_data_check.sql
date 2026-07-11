@@ -161,3 +161,14 @@ FROM raw_events
 GROUP BY user_id
 HAVING sessions > 1;
 -- No
+
+-- Average session duration
+WITH duration AS (
+	SELECT session_id, MIN(event_time) AS session_start, MAX(event_time) AS session_end, 
+		TIMESTAMPDIFF(MINUTE, MIN(event_time), MAX(event_time)) AS duration_minutes
+	FROM raw_events
+	GROUP BY session_id
+)
+SELECT AVG(duration_minutes)
+FROM duration;
+-- 3.98 min

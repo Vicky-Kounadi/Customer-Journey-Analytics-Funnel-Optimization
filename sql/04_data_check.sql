@@ -32,3 +32,10 @@ SELECT *
 FROM raw_events
 WHERE revenue < 0;
 -- No
+
+-- Bonus valid boolean
+SELECT bonus_flag, COUNT(*) AS times
+FROM raw_events
+GROUP BY bonus_flag;
+-- Only yes/no OK
+

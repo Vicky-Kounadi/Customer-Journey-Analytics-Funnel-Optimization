@@ -81,3 +81,22 @@ FROM raw_events
 WHERE event="Purchase"
 GROUP BY session_id
 HAVING purchase_count > 1;
+
+-- Can a sesion skip stages
+WITH events_in_order AS (
+    SELECT session_id, event_time,
+        CASE event
+            WHEN 'Browse' THEN 1
+            WHEN 'Add to Cart' THEN 2
+            WHEN 'Checkout' THEN 3
+            WHEN 'Purchase' THEN 4
+        END AS stage
+    FROM raw_events
+),
+check_order AS (
+    SELECT *, LAG(stage) OVER (PARTITION BY session_id ORDER BY event_time) AS previous_stage
+    FROM events_in_order
+)
+SELECT *
+FROM check_order
+WHERE stage - previous_stage > 1;

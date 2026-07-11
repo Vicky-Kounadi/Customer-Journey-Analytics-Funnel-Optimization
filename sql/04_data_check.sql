@@ -119,3 +119,14 @@ check_order AS (
 SELECT *
 FROM check_order
 WHERE stage_order < previous_stage;
+
+-- Does every session start with browse
+WITH first_event AS (
+    SELECT session_id, MIN(event_time) AS first_time
+    FROM raw_events
+    GROUP BY session_id
+)
+SELECT r.session_id, r.event
+FROM raw_events r
+JOIN first_event f ON r.session_id = f.session_id AND r.event_time = f.first_time
+WHERE r.event != 'Browse';

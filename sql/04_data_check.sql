@@ -140,3 +140,10 @@ AND NOT EXISTS (
     FROM raw_events c
     WHERE c.session_id = p.session_id AND c.event = 'Checkout' AND c.event_time < p.event_time
 );
+
+-- Revenue comes only from purchase
+SELECT session_id, SUM(revenue) AS rev_not_pur
+FROM raw_events
+WHERE event != 'Purchase'
+GROUP BY session_id
+HAVING rev_not_pur > 0;

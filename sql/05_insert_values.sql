@@ -45,3 +45,27 @@ FROM raw_events;
 
 SELECT * FROM dim_calendar;
 SELECT COUNT(*) FROM dim_calendar;
+
+-- EVENTS
+INSERT INTO dim_events(event_name, is_funnel_stage, stage_order, stage_description)
+SELECT DISTINCT event,
+		CASE WHEN event = 'Browse' OR event = 'Add to Cart' OR event = 'Checkout' OR event = 'Purchase' 
+				THEN 1
+			ELSE 0
+		END AS flag,
+        CASE WHEN event = 'Browse'  THEN 1
+			WHEN event = 'Add to Cart' THEN 2
+			WHEN event = 'Checkout' THEN 3
+			WHEN event = 'Purchase' THEN 4
+			ELSE NULL
+		END AS st,
+		CASE WHEN event = 'Browse'  THEN 'Customer is browsing products'
+			WHEN event = 'Add to Cart' THEN 'Customer adds an item to the cart'
+			WHEN event = 'Checkout' THEN 'Customer begins checkout'
+			WHEN event = 'Purchase' THEN 'Customer completes the purchase'
+			ELSE NULL
+		END AS descr
+FROM raw_events;
+
+SELECT * FROM dim_events;
+SELECT COUNT(*) FROM dim_events;

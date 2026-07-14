@@ -71,6 +71,7 @@ SELECT * FROM dim_events;
 SELECT COUNT(*) FROM dim_events;
 
 -- USERS 
+-- Problem, conflict -same user has bonus both Y n N-
 INSERT INTO dim_users(user_id, region, has_bonus)
 SELECT DISTINCT user_id, region,
 			CASE WHEN r.bonus_flag='Yes' THEN 1

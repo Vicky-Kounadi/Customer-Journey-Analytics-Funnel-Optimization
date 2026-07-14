@@ -172,3 +172,21 @@ WITH duration AS (
 SELECT AVG(duration_minutes)
 FROM duration;
 -- 3.98 min
+
+-- Bonus inconsistency
+SELECT user_id, COUNT(DISTINCT bonus_flag) AS dif_bonus
+FROM raw_events
+GROUP BY user_id
+HAVING COUNT(DISTINCT bonus_flag) > 1;
+
+SELECT *
+FROM raw_events
+WHERE bonus_flag='No';
+
+SELECT COUNT(*)
+FROM raw_events
+WHERE bonus_flag='No';
+
+SELECT COUNT(*)
+FROM raw_events
+WHERE event= 'Purchase';

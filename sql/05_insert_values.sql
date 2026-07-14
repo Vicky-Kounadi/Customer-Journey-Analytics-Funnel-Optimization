@@ -24,3 +24,24 @@ FROM raw_events;
 
 SELECT * FROM dim_product_categories;
 SELECT COUNT(*) FROM dim_product_categories;
+
+-- CALENDAR
+INSERT INTO dim_calendar(date_id, full_date, year, month, day, quarter, week, weekday_num, day_name, month_name, is_weekend)
+SELECT DISTINCT REPLACE(DATE(event_time), '-', ''), 
+			DATE(event_time),
+            YEAR(event_time),
+            MONTH(event_time),
+            DAY(event_time),
+            QUARTER(event_time),
+            WEEK(event_time),
+            WEEKDAY(event_time) +1,
+            DAYNAME(event_time),
+            MONTHNAME(event_time),
+            CASE WHEN (WEEKDAY(event_time)+1)=6 OR (WEEKDAY(event_time)+1)=7
+				THEN 1
+			ELSE 0
+			END
+FROM raw_events;
+
+SELECT * FROM dim_calendar;
+SELECT COUNT(*) FROM dim_calendar;

@@ -78,3 +78,23 @@ FROM raw_events;
 
 SELECT * FROM dim_users;
 SELECT COUNT(*) FROM dim_users;
+
+-- FACT EVENTS
+INSERT INTO fact_events(session_id, user_id, device_id, channel_id, product_category_id, event_id, date_id,
+						event_timestamp, revenue, has_bonus)
+SELECT r.session_id, 
+		u.user_id, d.device_id, c.channel_id, p.product_category_id, e.event_id, calen.date_id,
+		r.event_time, r.revenue,
+		CASE WHEN r.bonus_flag='Yes' THEN 1
+			ELSE 0
+		END AS bonus
+FROM raw_events r
+JOIN dim_users u ON r.user_id = u.user_id
+JOIN dim_devices d ON r.device = d.device_name
+JOIN dim_channels c ON r.channel = c.channel_name
+JOIN dim_product_categories p ON r.product_category = p.product_category_name
+JOIN dim_events e ON r.event = e.event_name
+JOIN dim_calendar calen ON DATE(r.event_time) = calen.full_date;
+
+SELECT * FROM fact_events;
+SELECT COUNT(*) FROM fact_events;

@@ -69,3 +69,14 @@ FROM raw_events;
 
 SELECT * FROM dim_events;
 SELECT COUNT(*) FROM dim_events;
+
+-- USERS 
+INSERT INTO dim_users(user_id, region, has_bonus)
+SELECT DISTINCT user_id, region,
+			CASE WHEN r.bonus_flag='Yes' THEN 1
+			ELSE 0
+		END AS bonus
+FROM raw_events;
+
+SELECT * FROM dim_users;
+SELECT COUNT(*) FROM dim_users;

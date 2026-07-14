@@ -66,8 +66,7 @@ SELECT * FROM dim_calendar;
 -- Dimension table for USERS
 CREATE TABLE dim_users (
     user_id VARCHAR(20) PRIMARY KEY,
-    region VARCHAR(50) NOT NULL,
-	has_bonus BOOLEAN NOT NULL
+    region VARCHAR(50) NOT NULL
 );
 
 SELECT * FROM dim_users;
@@ -83,6 +82,7 @@ CREATE TABLE fact_events (
 	date_id INT NOT NULL,
 	event_timestamp DATETIME NOT NULL,
 	revenue DECIMAL(15,2) DEFAULT 0.00,
+	has_bonus BOOLEAN NOT NULL,
     
 	FOREIGN KEY (user_id) REFERENCES dim_users(user_id),
 	FOREIGN KEY (device_id) REFERENCES dim_devices(device_id),

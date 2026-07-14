@@ -174,6 +174,9 @@ FROM duration;
 -- 3.98 min
 
 -- Bonus inconsistency
+-- Bonus is used for Purchases only sometimes
+-- Bonus is NOT a user attribute eg.coupon
+-- Redesign db to fit change (bonus in fact_events, not dim_users)
 SELECT user_id, COUNT(DISTINCT bonus_flag) AS dif_bonus
 FROM raw_events
 GROUP BY user_id

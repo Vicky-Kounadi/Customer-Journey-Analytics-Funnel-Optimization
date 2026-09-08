@@ -1,0 +1,2 @@
+-- CUSTOMER JOURNEY ANALYTICS + FUNNEL OPTIMIZING
+-- Perform EDA and Funnel analysis on my db

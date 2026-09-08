@@ -83,3 +83,19 @@ SELECT CASE
 	ROUND( AVG(time_diff), 2) AS diff_minutes
 FROM time_difference
 GROUP BY transition;
+
+-- Stage help to total revenue
+WITH 
+funnel_stage AS(
+	SELECT fe.event_id, event_name, COUNT(DISTINCT user_id) AS users, SUM(revenue) as revenue
+	FROM fact_events fe
+	JOIN dim_events de ON fe.event_id=de.event_id
+	GROUP BY fe.event_id
+)
+SELECT event_id, event_name, users, -- LAG(users) OVER (ORDER BY event_id) AS prev,
+	CASE WHEN event_id=1
+		THEN 100
+        ELSE ROUND(users / (LAG(users) OVER (ORDER BY event_id)) * 100, 2)
+	END AS conversion_rate,
+    revenue
+FROM funnel_stage fs;

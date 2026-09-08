@@ -21,3 +21,19 @@ SELECT event_id, event_name, users, -- LAG(users) OVER (ORDER BY event_id) AS pr
         ELSE ROUND(users / (LAG(users) OVER (ORDER BY event_id)) * 100, 2)
 	END AS conversion_rate
 FROM funnel_stage;
+
+-- Overall conversion rate
+WITH 
+total_users AS(
+	SELECT COUNT(*) AS total
+    from dim_users
+),
+final_stage AS(
+	SELECT fe.event_id, event_name, COUNT(DISTINCT user_id) AS final_users
+	FROM fact_events fe
+	JOIN dim_events de ON fe.event_id=de.event_id
+    WHERE stage_order=4
+	GROUP BY fe.event_id
+)
+SELECT total, final_users, ROUND((final_users / total) *100, 2) AS overall_conversion_rate
+FROM total_users, final_stage;

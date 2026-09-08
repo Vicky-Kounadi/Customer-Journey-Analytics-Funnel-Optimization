@@ -58,3 +58,19 @@ SELECT event_id, event_name,
 FROM funnel_stage;
 
 -- Biggest lekage point: drop-off is 70.95% at Checkout->Purchase
+
+-- Average time between stages
+WITH 
+time_difference AS(
+	SELECT session_id, event_id, event_timestamp, 
+		CASE WHEN event_id=1
+			THEN 0
+			ELSE TIMESTAMPDIFF(MINUTE, (LAG(event_timestamp) OVER (PARTITION BY session_id ORDER BY event_id)), event_timestamp)
+		END AS time_diff
+	FROM fact_events
+)
+SELECT td.event_id, event_name, ROUND(AVG(time_diff), 2) AS diff_minutes
+FROM time_difference td
+JOIN dim_events de ON td.event_id=de.event_id
+GROUP BY event_id
+ORDER BY td.event_id;

@@ -37,3 +37,24 @@ final_stage AS(
 )
 SELECT total, final_users, ROUND((final_users / total) *100, 2) AS overall_conversion_rate
 FROM total_users, final_stage;
+
+-- What is the drop-off rate between each stage?
+WITH 
+funnel_stage AS(
+	SELECT fe.event_id, event_name, COUNT(DISTINCT user_id) AS users
+	FROM fact_events fe
+	JOIN dim_events de ON fe.event_id=de.event_id
+	GROUP BY fe.event_id
+)
+SELECT event_id, event_name,
+		CASE WHEN event_id=1
+			THEN 0
+			ELSE (LAG(users) OVER (ORDER BY event_id) - users)  
+		END AS users_lost,
+		CASE WHEN event_id=1
+			THEN 0
+			ELSE ROUND( (LAG(users) OVER (ORDER BY event_id) - users) / (LAG(users) OVER (ORDER BY event_id)) * 100, 2)
+		END AS dropoff_rate
+FROM funnel_stage;
+
+-- Biggest lekage point: drop-off is 70.95% at Checkout->Purchase

@@ -69,8 +69,17 @@ time_difference AS(
 		END AS time_diff
 	FROM fact_events
 )
-SELECT td.event_id, event_name, ROUND(AVG(time_diff), 2) AS diff_minutes
+/*SELECT td.event_id, event_name, ROUND(AVG(time_diff), 2) AS diff_minutes
 FROM time_difference td
 JOIN dim_events de ON td.event_id=de.event_id
 GROUP BY event_id
-ORDER BY td.event_id;
+ORDER BY td.event_id;*/
+SELECT CASE
+		WHEN event_id = 1 THEN 'Browse'
+		WHEN event_id = 2 THEN 'Browse → Add to Cart'
+		WHEN event_id = 3 THEN 'Add to Cart → Checkout'
+		WHEN event_id = 4 THEN 'Checkout → Purchase'
+	END AS transition,
+	ROUND( AVG(time_diff), 2) AS diff_minutes
+FROM time_difference
+GROUP BY transition;
